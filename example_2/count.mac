@@ -1,0 +1,74 @@
+! Toto je komentar 
+
+FINISH  		! Skoncit procesory 
+/CLEAR			! Nova analyza
+
+CURVE = 2e-4		! Datova premena
+KEYW,PR_SET,1   	! 1.) preferences --> typ analizy 1 = mechanicka analyza
+KEYW,PR_STRUC,1 	! structural
+
+/PREP7			! Enter preprocessor  --> /element type/add
+
+ET,1,PLANE182   	! 2.) a.) element type,  2D, 4-node mechanika
+KEYOPT,1,3,3		! plane with thickness - keyoptioon c. 3 na hodnotu 3 (with thicknes)
+
+
+R,1,1e-3,   		! 2.) b.) real constatnt cislo 1 pre thk = 1 mm, konstatnta pre hrubku telesa
+
+
+MP, EX, 1, 127e3	! 3.) Modul pruznosti materialu = 127 GPa (pre material cislo 1)
+MP, PRXY, 1, 0.26	! poasonovo cislo pre material 1, y = 0.26
+
+
+! 4.) GEOMETRIA	! vytvorenie bodov v kartezianskom suradnom systeme
+
+
+K,,0, 0
+K,,0, 100 
+K,,100, 100
+K,,100, 30
+K,,1900, 30
+K,,1900, -160
+K,,400, -160
+K,,400,-60
+K,,100,-60
+K,,100,-130
+K,,0,-130
+K,,0,-30
+K,,1870,-30
+K,,1870,0
+
+
+/PNUM,KP,1		! Cislovanie keypointov
+
+*DO,i,1,13 		! Cyklus pocitadlo od 0 po 13 s krokom 1
+L,i, i+1		! Spoji/vykresli ciari medzi bodmi v poradi
+*ENDDO			! Koniec cyklu
+
+L, 14,1		! Posledne spojenie - zaciat. a konc. bodu
+
+
+AL, ALL		! Area by lines pomocou vsetkych vybratych ciar
+
+
+! 5.) MESHING --> tvorba sieti elemnetarnych prvkov
+
+AESIZE, 1, 1e1		! nastavenie velkosti elementu pre plochu 1
+
+AMESH, ALL		! vymeshuj vsetky plochy
+!AMESH, 1		! vymeshuju plochu 1
+
+
+
+! 6.) OKRAJOVE PODMIENKY
+
+ 
+/GO 
+DL,1,1,ALL,0
+DL,11,1,ALL,0		! nastavenie votknutia (displacement 0) pre ciaru 11, plochu 1, vsetky DOF  
+FK,6,FY,-3e-3		! nastavenie sily posobiacej v Key Pointe c.6
+
+FINISH			! ukoncenioe proprocesora
+/SOL			! vojdem to solution procesora
+
+SOLVE			! prikaz solve
