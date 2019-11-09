@@ -1,4 +1,4 @@
-# Example 1 - lever
+# Example 3 - lever
 
 #### Material properties
 
