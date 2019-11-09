@@ -1,4 +1,4 @@
-# Example 1 - microactuator
+# Example 2 - microactuator
 
 #### Material properties
 
