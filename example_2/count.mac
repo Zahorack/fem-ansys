@@ -53,7 +53,7 @@ AL, ALL		! Area by lines pomocou vsetkych vybratych ciar
 
 ! 5.) MESHING --> tvorba sieti elemnetarnych prvkov
 
-AESIZE, 1, 1e1		! nastavenie velkosti elementu pre plochu 1
+AESIZE, 1, 2e1		! nastavenie velkosti elementu pre plochu 1
 
 AMESH, ALL		! vymeshuj vsetky plochy
 !AMESH, 1		! vymeshuju plochu 1
