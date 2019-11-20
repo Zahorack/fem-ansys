@@ -1,0 +1,11 @@
+
+
+
+ SOLUTION HISTORY INFORMATION FOR JOB: pokus1.mntr                                                                                                                                                                                                                                                         
+ ANSYS RELEASE 15.0             .7      11:57:41    11/14/2019
+
+ LOAD  SUB-  NO.   NO.  TOTL   INCREMENT    TOTAL       VARIAB 1    VARIAB 2    VARIAB 3
+ STEP  STEP  ATTMP ITER ITER   TIME/LFACT   TIME/LFACT  MONITOR     MONITOR     MONITOR
+                                                        CPU         MxDs        MxPl
+
+   1      1    1     1     1     1.0000       1.0000      0.70201     -0.15712      0.78886E-30

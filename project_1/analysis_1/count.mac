@@ -1,13 +1,13 @@
-FINISH  		
-/CLEAR					! Nova analyza
+FINISH  		! Totoje komentar= skoncit cierne procesory 
+/CLEAR			! Nova analyza
 
 !pouzivam konzistne jednotky mm, N , MPa
 !jednotky mm,N,MPa
 
 /PNUM, LINE, 1
 
-KEYW,PR_SET,1   		! 1: typ analizy 1 = mechanicka analyza
-KEYW,PR_STRUC,1 		! structural
+KEYW,PR_SET,1   	! 1: typ analizy 1 = mechanicka analyza
+KEYW,PR_STRUC,1 	! structural
 
 
 
@@ -15,11 +15,14 @@ KEYW,PR_STRUC,1 		! structural
 ET,1,PLANE182   		! 2a element type,  2D , 4 node mechanika
 KEYOPT,1,3,3			! keyoptioon c 3 na hodnotu 3 (with thicknes)
 
-						! nastavenie konstanty pre element type, thk=30mm
-R,1,2,   				! 2b real constatnt cislo 1 pre thk = 2 mm, konstatnta pre hrubku telesa
+				! nastavenie konštanty pre element type, thk=30mm
+R,1,2,   			! 2b real constatnt cislo 1 pre thk = 2 mm, konstatnta pre hrubku telesa, poyòuzivam koinyòzsitentene jednotky
 
 MP, EX, 1, 214e3		! 3 modul pruznosti 214GPa pre material cislo 1
 MP, PRXY, 1, 0.3		! poisonovo cislo pre material 1 ´= 0.3
+
+
+
 
 
 
@@ -27,64 +30,88 @@ MP, PRXY, 1, 0.3		! poisonovo cislo pre material 1 ´= 0.3
 
 K,,11, 0
 K,,6, 0 
-K,,6, 45
-!K,,31.5, 45 
-!K,,31.5, 54
-!K,,36.5, 54
-!K,,36.5, 45
-K,,75, 45
+K,,6, 20
+K,,25, 38
+K,,42,38
+K,,95, 45
 K,,103, 54
 K,,108, 54
-K,,108, 49
-K,,71, 40
+K,,108, 40
+K,,100, 40
+K,,45, 35
+K,,71, 20
 K,,71, 0
 K,,66,0
-K,,66, 40
-K,,11, 40
+K,,66,20
+K,,42,27
+K,,34,35
+K,,26,27
+K,,26,25
+K,,11,20
 
 
-!/PNUM,KP,1
 
-*DO,i,1,11 				!cyklus pocitadlo od 0 po 26
-L,i, i+1				! vykresli ciari medzi bodmi v poradi
-*ENDDO					!koniec cyklu
-L, 12,1
+*DO,i,1,19 		!cyklus pocitadlo od 0 po 26
+L,i, i+1		! vykresli ciari medzi bodmi v poradi
+*ENDDO			!koniec cyklu
+
+L, 20,1
+
+
+
+LFILLT, 10, 11, 2
+LFILLT, 3, 4, 25
+LFILLT, 20, 19, 15
+LFILLT, 15, 14, 12
+LFILLT, 11, 12, 15
+LFILLT, 9, 10, 3
+LFILLT, 9, 8, 3
+LFILLT, 18, 19, 2
+LFILLT, 33, 35, 2
+LFILLT, 4,5, 40
 
 AL, ALL
 
 
-K,,31.5, 45.5 
-K,,31.5, 54
-K,,36.5, 54
-K,,36.5, 45.5
+CYL4, 34, 27, 10
+AADD, 1,2
 
 
-L, 13,14
-L, 14,15
-L, 15,16
-L, 16,13
+CYL4, 34, 27, 8
 
-!LSEL,S, , ,13, 14, 15,16
-AL, 13, 14, 15, 16
+ASEL, S, AREA,,			!select plochy "AREA" cislo 1 az 2  skrokom 1, nova sada "s"
 
-AESIZE, 1, 5e-1			!nastavenie velkosti elementu pre plochu 1
+CM, kruzky, AREA		!mnozina  vsetkych aktualne vybranych ploch pod nayvom kruzky
+ALLSEL, ALL			!select all (KP, L, A, V , N, E)
+ASBA, 3, kruzky 		!substract areas	
 
-AMESH, 1	
 
-AESIZE, 2, 5e-1
-AMESH, 2
+AL, ALL
 
-DL,14,1,ALL,0
-DL,5,1,ALL,0
-DL,6,1,ALL,0
+
+/PNUM,KP,1
 
 
 
-LSEL,S, , ,1 
+AESIZE, ALL,15e-1		!nastavenie velkosti elementu pre plochu 1
+
+AMESH, ALL	
+
+DL,7,1,ALL,0
+DL,8,1,ALL,0
+
+DL,15,,SYMM
+DL,16,,SYMM
+DL,18,,SYMM
+DL,17,,SYMM
+
+
+
+
+LSEL,S, , , 1 
 NSLL,S,1
 
-*GET, pocnodov, NODE, 0 , COUNT	!pocet aktualne vybranych nodov dopremenj pocnodov 
-							!zistenie poctu nodov do skalarnej premennej pocnodov
+*GET, pocnodov, NODE, 0 , COUNT		!pocet aktualne vybranych nodov dopremenj pocnodov ! zistenie poctu nodov do skalarnej premennej pocnodov
 
 F, ALL, FY, (230)/pocnodov	!sila na nody (vybrane) definovanie sily v -y smere do vsetkych vybratych nodov
 ALLSELL, ALL
@@ -100,15 +127,13 @@ SOLVE
 
 
 
-
-
-RECTING, 0,110, -10, 10	!vytvarame obdlyòznik x od 0 po 110 mm, y od -10 po 10 mm
+RECTING, 0,110, -10, 10		!vytvarame obdlyòznik x od 0 po 110 mm, y od -10 po 10 mm
 RECTING, 95, 110, -82.5, 10
 
 PCIRC,0,10,0,360,		!vytvaram kruh plny na x=0, y=0 rad = 10 mm
 CYL4, 102.5, -82.5, 7.5
 
-AADD, ALL 				!zlucit vsetky plochy do jednej 
+AADD, ALL 			!zlucit vsetky plochy do jednej 
 
 
 
@@ -123,21 +148,21 @@ LFILLT, 18,24, 10
 Al, ALL
 
 
-PCIRC, 7.5				!vytvaram kruh plny na x=0, y=0 rad = 7.5 mm
-CYL4, 102.5, -82.5, 5	!kruh na pozici s radiusom
+PCIRC, 7.5			!vytvaram kruh plny na x=0, y=0 rad = 7.5 mm
+CYL4, 102.5, -82.5, 5		!kruh na pozici s radiusom
 
 !ASBA, 5,1
 !ASBA, 3,2
 
 ASEL, S, AREA,, 2,3		!select plochy "AREA" cislo 1 az 2  skrokom 1, nova sada "s"
 CM, kruzky, AREA		!mnozina  vsetkych aktualne vybranych ploch pod nayvom kruzky
-ALLSEL, ALL				!select all (KP, L, A, V , N, E)
+ALLSEL, ALL			!select all (KP, L, A, V , N, E)
 ASBA, 1, kruzky 		!substract areas	
 
 
 !MESHING
 AESIZE, ALL, 1			!nastavenie velkosti elementu pre vsetky plochy
-AMESH, ALL				!vymeshuj vsetky plochy
+AMESH, ALL			!vymeshuj vsetky plochy
 
 
 
@@ -148,7 +173,7 @@ AMESH, ALL				!vymeshuj vsetky plochy
 !DL, 7,,ALL, 0	
 
 !LEPSIE RIESENIE CEZ SELECTION
-CSYS,1					! vybratie cylindrickeho sur. systemu rotacia okolo osi Z
+CSYS,1				! vybratie cylindrickeho sur. systemu rotacia okolo osi Z
 LSEL,S,LOC,X,7,8 		! vybratie novej sady ciar ktore su v medzikruzi 7 az 8 mm od stredu sur. systemu
 DL,ALL,1,ALL,0			! na vsetky vybrate ciary aplikovat votknutie (displacement 0)
 ALLSEL,ALL
@@ -160,11 +185,11 @@ ALLSEL,ALL
 
 !LSEL, S, LINE,,10,11,		! vyber spodnych ciar  LEPSIE RIESENIE JE NIZSIE!!!!!
 
-CSYS,0					! vybratie kartezskeho systemu
+CSYS,0				! vybratie kartezskeho systemu
 WPOFFS,102.5,-82.5 		! posun working plane do suradnic x,y
-CSWPLA,11,1				! vytvor user coordinate system cylindricky uzivatelsky v origine working plane
+CSWPLA,11,1			! vytvor user coordinate system cylindricky uzivatelsky v origine working plane
 LSEL,S,LOC,X,4,6		! vyber ciar v medzikruzi so stredom v origine working plane
-LSEL,R,LOC,Y,180,360	! vyber ciar podla uhlu (spodne ciary)
+LSEL,R,LOC,Y,180,360		! vyber ciar podla uhlu (spodne ciary)
 
 NSLL, S, 1				! vyber vsetkych nodov z vybratych ciar vratane koncovych nodov
 *GET, pocnodov, NODE, 0 , COUNT		!pocet aktualne vybranych nodov dopremenj pocnodov ! zistenie poctu nodov do skalarnej premennej pocnodov
